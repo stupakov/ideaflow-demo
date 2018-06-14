@@ -2,41 +2,35 @@ import React from 'react';
 import {EditorState, convertToRaw} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
+import PersonEntry from './PersonEntry';
+import HashtagEntry from './HashtagEntry';
 
-import 'draft-js/dist/Draft.css';
 import 'draft-js-mention-plugin/lib/plugin.css';
 import './IdeaflowEditor.css';
 
-const Entry = (props) => {
-   const {
-    mention,
-    searchValue, // eslint-disable-line no-unused-vars
-    isFocused, // eslint-disable-line no-unused-vars
-    ...parentProps
-  } = props;
-
-  return (
-    <div {...parentProps}>
-      <div>
-        #{mention.name}
-      </div>
-    </div>
-  );
-}
 
 class IdeaflowEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    this.mentionPlugin = createMentionPlugin({
+    this.hashtagPlugin = createMentionPlugin({
       mentionTrigger: '#',
       mentionPrefix: '#',
+      entityMutability: 'IMMUTABLE',
+      // mentionRegExp: ''
+    });
+
+    this.personPlugin = createMentionPlugin({
+      mentionTrigger: '@',
+      mentionPrefix: '@',
+      entityMutability: 'IMMUTABLE',
       // mentionRegExp: ''
     });
 
     this.state = {
       editorState: EditorState.createEmpty(),
-      suggestions: props.suggestions.hashtags,
+      hashtagSuggestions: props.suggestions.hashtags,
+      personSuggestions: props.suggestions.people,
     };
 
     this.logState = () => {
@@ -44,9 +38,14 @@ class IdeaflowEditor extends React.Component {
       console.log(convertToRaw(content));
     };
 
-    this.onSearchChange = ({ value }) => {
+    this.onPersonSearchChange = ({ value }) => {
       this.setState({
-        suggestions: defaultSuggestionsFilter(value, this.props.suggestions.hashtags),
+        personSuggestions: defaultSuggestionsFilter(value, this.props.suggestions.people),
+      });
+    };
+    this.onHashtagSearchChange = ({ value }) => {
+      this.setState({
+        hashtagSuggestions: defaultSuggestionsFilter(value, this.props.suggestions.hashtags),
       });
     };
   }
@@ -54,8 +53,9 @@ class IdeaflowEditor extends React.Component {
   onChange = (editorState) => this.setState({editorState});
 
   render() {
-    const { MentionSuggestions } = this.mentionPlugin;
-    const plugins = [this.mentionPlugin];
+    const HashtagSuggestions = this.hashtagPlugin.MentionSuggestions;
+    const PersonSuggestions = this.personPlugin.MentionSuggestions;
+    const plugins = [this.hashtagPlugin, this.personPlugin];
 
     return (
       <div className='ideaflow-editor' >
@@ -65,10 +65,15 @@ class IdeaflowEditor extends React.Component {
           plugins={plugins}
         />
         <br/>
-        <MentionSuggestions
-          onSearchChange={this.onSearchChange}
-          suggestions={this.state.suggestions}
-          entryComponent={Entry}
+        <HashtagSuggestions
+          onSearchChange={this.onHashtagSearchChange}
+          suggestions={this.state.hashtagSuggestions}
+          entryComponent={HashtagEntry}
+        />
+        <PersonSuggestions
+          onSearchChange={this.onPersonSearchChange}
+          suggestions={this.state.personSuggestions}
+          entryComponent={PersonEntry}
         />
         <input
           onClick={this.logState}
