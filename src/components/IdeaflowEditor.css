@@ -6,4 +6,11 @@
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
+  cursor: text;
+  font-size: 30;
+}
+
+
+.hashtag {
+  color: rgba(95, 184, 138, 1.0);
 }
