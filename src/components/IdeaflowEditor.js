@@ -7,12 +7,31 @@ import 'draft-js/dist/Draft.css';
 import 'draft-js-mention-plugin/lib/plugin.css';
 import './IdeaflowEditor.css';
 
+const Entry = (props) => {
+   const {
+    mention,
+    searchValue, // eslint-disable-line no-unused-vars
+    isFocused, // eslint-disable-line no-unused-vars
+    ...parentProps
+  } = props;
+
+  return (
+    <div {...parentProps}>
+      <div>
+        #{mention.name}
+      </div>
+    </div>
+  );
+}
+
 class IdeaflowEditor extends React.Component {
   constructor(props) {
     super(props);
 
     this.mentionPlugin = createMentionPlugin({
-      mentionTrigger: '#'
+      mentionTrigger: '#',
+      mentionPrefix: '#',
+      // mentionRegExp: ''
     });
 
     this.state = {
@@ -34,10 +53,6 @@ class IdeaflowEditor extends React.Component {
 
   onChange = (editorState) => this.setState({editorState});
 
-  onAddMention = () => {
-    // get the mention object selected
-  }
-
   render() {
     const { MentionSuggestions } = this.mentionPlugin;
     const plugins = [this.mentionPlugin];
@@ -53,7 +68,7 @@ class IdeaflowEditor extends React.Component {
         <MentionSuggestions
           onSearchChange={this.onSearchChange}
           suggestions={this.state.suggestions}
-          onAddMention={this.onAddMention}
+          entryComponent={Entry}
         />
         <input
           onClick={this.logState}
