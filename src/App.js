@@ -16,6 +16,14 @@ const suggestions = {
       name: 'Daniel Tiger',
       avatar: 'https://i.pinimg.com/originals/04/4b/30/044b3090e6cbd8421aea7322ea4e0a65.jpg',
     },
+  ],
+  relations: [
+    {
+      name: 'TV is bad',
+    },
+    {
+      name: 'Television is good',
+    },
   ]
 };
 

@@ -4,6 +4,7 @@ import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
 import PersonEntry from './PersonEntry';
 import HashtagEntry from './HashtagEntry';
+import RelationEntry from './RelationEntry';
 
 import 'draft-js-mention-plugin/lib/plugin.css';
 import './IdeaflowEditor.css';
@@ -27,10 +28,18 @@ class IdeaflowEditor extends React.Component {
       // mentionRegExp: ''
     });
 
+    this.relationPlugin = createMentionPlugin({
+      mentionTrigger: '<>',
+      mentionPrefix: '<>',
+      entityMutability: 'IMMUTABLE',
+      // mentionRegExp: ''
+    });
+
     this.state = {
       editorState: EditorState.createEmpty(),
       hashtagSuggestions: props.suggestions.hashtags,
       personSuggestions: props.suggestions.people,
+      relationSuggestions: props.suggestions.relations,
     };
 
     this.logState = () => {
@@ -48,6 +57,11 @@ class IdeaflowEditor extends React.Component {
         hashtagSuggestions: defaultSuggestionsFilter(value, this.props.suggestions.hashtags),
       });
     };
+    this.onRelationSearchChange = ({ value }) => {
+      this.setState({
+        relationSuggestions: defaultSuggestionsFilter(value, this.props.suggestions.relations),
+      });
+    };
   }
 
   onChange = (editorState) => this.setState({editorState});
@@ -55,7 +69,8 @@ class IdeaflowEditor extends React.Component {
   render() {
     const HashtagSuggestions = this.hashtagPlugin.MentionSuggestions;
     const PersonSuggestions = this.personPlugin.MentionSuggestions;
-    const plugins = [this.hashtagPlugin, this.personPlugin];
+    const RelationSuggestions = this.relationPlugin.MentionSuggestions;
+    const plugins = [this.hashtagPlugin, this.personPlugin, this.relationPlugin];
 
     return (
       <div className='ideaflow-editor' >
@@ -74,6 +89,11 @@ class IdeaflowEditor extends React.Component {
           onSearchChange={this.onPersonSearchChange}
           suggestions={this.state.personSuggestions}
           entryComponent={PersonEntry}
+        />
+        <RelationSuggestions
+          onSearchChange={this.onRelationSearchChange}
+          suggestions={this.state.relationSuggestions}
+          entryComponent={RelationEntry}
         />
         <input
           onClick={this.logState}
