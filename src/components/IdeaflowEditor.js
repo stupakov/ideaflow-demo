@@ -1,5 +1,5 @@
 import React from 'react';
-import {EditorState, convertToRaw} from 'draft-js';
+import {EditorState} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin from 'draft-js-mention-plugin';
 import PersonEntry from './PersonEntry';
@@ -39,11 +39,6 @@ class IdeaflowEditor extends React.Component {
       hashtagSuggestions: props.suggestions.hashtags,
       personSuggestions: props.suggestions.people,
       relationSuggestions: props.suggestions.relations,
-    };
-
-    this.logState = () => {
-      const content = this.state.editorState.getCurrentContent();
-      console.log(convertToRaw(content));
     };
 
     this.onPersonSearchChange = ({ value }) => {
@@ -93,11 +88,6 @@ class IdeaflowEditor extends React.Component {
           onSearchChange={this.onRelationSearchChange}
           suggestions={this.state.relationSuggestions}
           entryComponent={RelationEntry}
-        />
-        <input
-          onClick={this.logState}
-          type="button"
-          value="Log State"
         />
       </div>
     );
