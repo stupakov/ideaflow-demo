@@ -1,13 +1,15 @@
 import React from 'react';
 import {EditorState, convertToRaw} from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
-import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
+import createMentionPlugin from 'draft-js-mention-plugin';
 import PersonEntry from './PersonEntry';
 import HashtagEntry from './HashtagEntry';
 import RelationEntry from './RelationEntry';
+import suggestionsFilter from '../utils/suggestionsFilter';
 
 import 'draft-js-mention-plugin/lib/plugin.css';
 import './IdeaflowEditor.css';
+
 
 
 class IdeaflowEditor extends React.Component {
@@ -18,21 +20,18 @@ class IdeaflowEditor extends React.Component {
       mentionTrigger: '#',
       mentionPrefix: '#',
       entityMutability: 'IMMUTABLE',
-      // mentionRegExp: ''
     });
 
     this.personPlugin = createMentionPlugin({
       mentionTrigger: '@',
       mentionPrefix: '@',
       entityMutability: 'IMMUTABLE',
-      // mentionRegExp: ''
     });
 
     this.relationPlugin = createMentionPlugin({
       mentionTrigger: '<>',
       mentionPrefix: '<>',
       entityMutability: 'IMMUTABLE',
-      // mentionRegExp: ''
     });
 
     this.state = {
@@ -49,17 +48,17 @@ class IdeaflowEditor extends React.Component {
 
     this.onPersonSearchChange = ({ value }) => {
       this.setState({
-        personSuggestions: defaultSuggestionsFilter(value, this.props.suggestions.people),
+        personSuggestions: suggestionsFilter(value, this.props.suggestions.people),
       });
     };
     this.onHashtagSearchChange = ({ value }) => {
       this.setState({
-        hashtagSuggestions: defaultSuggestionsFilter(value, this.props.suggestions.hashtags),
+        hashtagSuggestions: suggestionsFilter(value, this.props.suggestions.hashtags),
       });
     };
     this.onRelationSearchChange = ({ value }) => {
       this.setState({
-        relationSuggestions: defaultSuggestionsFilter(value, this.props.suggestions.relations),
+        relationSuggestions: suggestionsFilter(value, this.props.suggestions.relations),
       });
     };
   }
