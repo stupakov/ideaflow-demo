@@ -2,10 +2,12 @@
   "name": "ideaflow",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://stupakov.github.io/ideaflow-demo",
   "dependencies": {
     "draft-js": "^0.10.5",
     "draft-js-mention-plugin": "^3.0.4",
     "draft-js-plugins-editor": "^2.1.1",
+    "gh-pages": "^1.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4"
@@ -14,6 +16,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   }
 }
